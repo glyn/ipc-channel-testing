@@ -467,6 +467,11 @@ fn router_receiver_set_leak() {
     for _ in 1..10000 {
         let (tx, rx) = ipc::channel::<i32>().unwrap();
 
+        // The fds are private, but this transmute lets us get at them
+        let tx_fd: &std::sync::Arc<u32> = unsafe { std::mem::transmute(&tx) };
+        let rx_fd: &std::sync::Arc<u32> = unsafe { std::mem::transmute(&rx) };
+        println!("tx_fd = {}, rx_fd = {}", *tx_fd, *rx_fd);
+
         let (callback_fired_sender, callback_fired_receiver) =
             crossbeam_channel::unbounded::<i32>();
         #[allow(deprecated)]
