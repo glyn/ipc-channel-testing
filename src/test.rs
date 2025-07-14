@@ -452,6 +452,35 @@ fn router_big_data() {
 }
 
 #[test]
+fn receiver_leak() {
+    let mut senders = vec![];
+    for _ in 1..10000 {
+        let (tx, rx) = ipc::channel::<i32>().unwrap();
+        senders.push(tx);
+    }
+}
+
+#[test]
+fn router_receiver_set_leak() {
+    for _ in 1..10000 {
+        let (tx, rx) = ipc::channel::<i32>().unwrap();
+
+        let (callback_fired_sender, callback_fired_receiver) =
+            crossbeam_channel::unbounded::<i32>();
+        #[allow(deprecated)]
+        ROUTER.add_route(
+            rx.to_opaque(),
+            Box::new(move |i| {
+                callback_fired_sender.send(i.to().unwrap()).unwrap();
+            }),
+        );
+        drop(tx);
+        drop(callback_fired_receiver);
+    }
+    ROUTER.shutdown();
+}
+
+#[test]
 fn shared_memory() {
     let person = ("Patrick Walton".to_owned(), 29);
     let person_and_shared_memory = (person, IpcSharedMemory::from_byte(0xba, 1024 * 1024));
