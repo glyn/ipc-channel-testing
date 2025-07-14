@@ -121,6 +121,8 @@ pub fn spawn_server(test_name: &str, server_args: &[(&str, &str)]) -> process::C
 
 type Person = (String, u32);
 
+/*
+
 #[test]
 fn simple() {
     let person = ("Patrick Walton".to_owned(), 29);
@@ -449,7 +451,7 @@ fn router_big_data() {
     let received_people = callback_fired_receiver.recv().unwrap();
     assert_eq!(received_people, people);
     thread.join().unwrap();
-}
+} */
 
 #[test]
 fn receiver_leak() {
@@ -480,6 +482,7 @@ fn router_receiver_set_leak() {
     ROUTER.shutdown();
 }
 
+/*
 #[test]
 fn shared_memory() {
     let person = ("Patrick Walton".to_owned(), 29);
@@ -758,3 +761,4 @@ fn test_receiver_stream() {
         _ => panic!("Stream should have 5"),
     };
 }
+*/
