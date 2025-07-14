@@ -33,7 +33,7 @@ jobs:
         run: cargo clippy --features "${{ matrix.features }}" --target ${{ matrix.platform.target }}
 
       - name: Cargo test
-        run: cargo test --features "${{ matrix.features }}" --target ${{ matrix.platform.target }}
+        run: cargo test --features "${{ matrix.features }}" --target ${{ matrix.platform.target }} -- --nocapture
 
       - name: Cargo test benches
         run: cargo test --benches --features "${{ matrix.features }}" --target ${{ matrix.platform.target }}
